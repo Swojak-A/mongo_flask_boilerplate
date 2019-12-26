@@ -1,0 +1,45 @@
+version: '3.4'
+
+x-base: &base
+    env_file: ./.env
+    volumes:
+      - ./api:/api
+    depends_on:
+      - db
+
+services:
+  db:
+    restart: unless-stopped
+    image: mongo:4.2
+    ports:
+      - '27017-27019:27017-27019'
+    env_file: ./.env
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./import:/var/lib/mongodb/import
+      - dbdata:/var/lib/mongodb/data
+    command: mongod --auth
+
+  api:
+    <<: *base
+    build:
+      context: .
+      args:
+        MODE: dev
+    restart: unless-stopped
+    image: mongo_flask:latest
+    ports:
+      - '5000:5000'
+    env_file: ./.env
+    command: >
+      sh -c "../scripts/wait-for-it.sh db:27017 &&
+        python manage.py runserver"
+
+
+volumes:
+  dbdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $PWD/dbdata
