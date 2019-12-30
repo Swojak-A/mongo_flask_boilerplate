@@ -15,7 +15,9 @@ services:
       - '27017-27019:27017-27019'
     env_file: ./.env
     volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./dbscripts/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+      - ./dbscripts/auth-script.js:/var/lib/mongodb/scripts/auth-script.js:ro
+      - ./dbscripts/validators-script.js:/var/lib/mongodb/scripts/validators-script.js:ro
       - ./import:/var/lib/mongodb/import
       - dbdata:/var/lib/mongodb/data
     command: mongod --auth

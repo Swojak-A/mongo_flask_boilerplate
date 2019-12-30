@@ -11,7 +11,10 @@ media
 static
 dbdata
 import
-init-mongo.js
+
+leftovers
+thrash
+_thrash
 
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
